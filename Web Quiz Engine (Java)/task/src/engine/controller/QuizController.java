@@ -1,5 +1,6 @@
 package engine.controller;
 
+import engine.dto.NewQuizDto;
 import engine.dto.QuizDto;
 import engine.service.QuizService;
 import lombok.RequiredArgsConstructor;
@@ -12,15 +13,20 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api")
 public class QuizController {
 
-    private final QuizService quizService = new QuizService();
+    private final QuizService quizService;
 
-    @GetMapping("/quiz")
-    public ResponseEntity<?> getQuiz() {
-        return ResponseEntity.ok(new QuizDto());
+    @GetMapping("/quizzes/{id}")
+    public ResponseEntity<?> getQuizById(@PathVariable Long id) {
+        return new ResponseEntity<>(quizService.getQuizById(id), HttpStatus.OK);
     }
 
     @PostMapping("/quiz")
     public ResponseEntity<?> postAnswer(@RequestParam(name = "answer") Integer answerIndex) {
         return new ResponseEntity<>(quizService.checkAnswer(answerIndex), HttpStatus.OK);
+    }
+
+    @PostMapping("/quizzes")
+    public ResponseEntity<?> addNewQuiz(@RequestBody NewQuizDto newQuizDto) {
+        return new ResponseEntity<>(quizService.saveNewQuiz(newQuizDto), HttpStatus.OK);
     }
 }
