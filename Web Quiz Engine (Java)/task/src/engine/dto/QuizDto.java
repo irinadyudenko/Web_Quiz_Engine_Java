@@ -11,8 +11,8 @@ import java.util.List;
 @AllArgsConstructor
 public class QuizDto {
 
-    private String title = "The Java Logo";
-    private String text = "What is depicted on the Java logo?";
-    private List<String> options = List.of("Robot", "Tea leaf", "Cup of coffee", "Bug");
-
+    private Long id;
+    private String title;
+    private String text;
+    private List<String> options;
 }
