@@ -30,7 +30,9 @@ public class QuizService {
     }
 
     public QuizDto saveNewQuiz(NewQuizDto newQuizDto) {
-        Quiz quiz = quizRepository.save(modelMapper.map(newQuizDto, Quiz.class));
+        Quiz quizToSave = modelMapper.map(newQuizDto, Quiz.class);
+        quizToSave.setId(quizRepository.count()+1);
+        Quiz quiz = quizRepository.save(quizToSave);
         return modelMapper.map(quiz, QuizDto.class);
     }
 
@@ -45,5 +47,16 @@ public class QuizService {
         quizRepository.findAll()
                 .forEach(quiz -> quizDtos.add(modelMapper.map(quiz, QuizDto.class)));
         return quizDtos;
+    }
+
+    public AnswerDto solveTheQuiz(Long id, Integer answerIndex) {
+        AnswerDto answerDto = new AnswerDto();
+        Quiz quiz = quizRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        if (quiz.getAnswer().equals(answerIndex)) {
+            answerDto.setSuccess(true);
+            answerDto.setFeedback("Congratulations, you're right!");
+        }
+        return answerDto;
     }
 }

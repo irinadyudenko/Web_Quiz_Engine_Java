@@ -33,4 +33,10 @@ public class QuizController {
     public ResponseEntity<?> addNewQuiz(@RequestBody NewQuizDto newQuizDto) {
         return new ResponseEntity<>(quizService.saveNewQuiz(newQuizDto), HttpStatus.OK);
     }
+
+    @PostMapping("/quizzes/{id}/solve")
+    public ResponseEntity<?> solveTheQuiz(@RequestParam(name = "answer") Integer answerIndex,
+                                          @PathVariable Long id) {
+        return new ResponseEntity<>(quizService.solveTheQuiz(id, answerIndex), HttpStatus.OK);
+    }
 }
