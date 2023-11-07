@@ -31,6 +31,10 @@ public class Quiz {
     )
     private List<String> options;
 
-    @Column(name = "answer")
-    private Integer answer;
+    @ElementCollection
+    @CollectionTable(
+            name="quiz_answer",
+            joinColumns=@JoinColumn(name="quiz_id")
+    )
+    private List<Integer> answer;
 }
