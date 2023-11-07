@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
 
 @RestController
 @RequiredArgsConstructor
@@ -33,8 +34,8 @@ public class QuizController {
     }
 
     @PostMapping("/quizzes")
-    public ResponseEntity<?> addNewQuiz(@Valid @RequestBody NewQuizDto newQuizDto) {
-        return new ResponseEntity<>(quizService.saveNewQuiz(newQuizDto), HttpStatus.OK);
+    public ResponseEntity<?> addNewQuiz(@Valid @RequestBody NewQuizDto newQuizDto, Principal principal) {
+        return new ResponseEntity<>(quizService.saveNewQuiz(newQuizDto, principal.getName()), HttpStatus.OK);
     }
 
     @PostMapping("/quizzes/{id}/solve")
@@ -42,4 +43,10 @@ public class QuizController {
                                           @PathVariable Long id) {
         return new ResponseEntity<>(quizService.solveTheQuiz(id, checkAnswerDto), HttpStatus.OK);
     }
+    @DeleteMapping("/quizzes/{id}")
+    public ResponseEntity<?> deleteRecipe(@PathVariable Long id, Principal principal) {
+        quizService.deleteQuiz(id, principal.getName());
+        return ResponseEntity.noContent().build();
+    }
+
 }

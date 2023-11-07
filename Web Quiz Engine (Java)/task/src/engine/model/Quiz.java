@@ -7,7 +7,9 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -42,4 +44,27 @@ public class Quiz {
     )
     @Fetch(value = FetchMode.SUBSELECT)
     private Set<Integer> answer;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @NotNull
+    private User user;
+
+    @Override
+    public boolean equals(Object otherObject) {
+        if (this == otherObject) {
+            return true;
+        }
+        if (!(otherObject instanceof Quiz other)) {
+            return false;
+        }
+        return this.title.equals(other.title) &&
+                this.text.equals(other.text);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }
+
