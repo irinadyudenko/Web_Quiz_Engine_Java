@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "quiz")
@@ -36,5 +37,5 @@ public class Quiz {
             name="quiz_answer",
             joinColumns=@JoinColumn(name="quiz_id")
     )
-    private List<Integer> answer;
+    private Set<Integer> answer;
 }
