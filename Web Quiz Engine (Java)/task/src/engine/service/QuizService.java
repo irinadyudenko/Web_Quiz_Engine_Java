@@ -1,6 +1,7 @@
 package engine.service;
 
 import engine.dto.AnswerDto;
+import engine.dto.CheckAnswerDto;
 import engine.dto.NewQuizDto;
 import engine.dto.QuizDto;
 import engine.model.Quiz;
@@ -49,11 +50,11 @@ public class QuizService {
         return quizDtos;
     }
 
-    public AnswerDto solveTheQuiz(Long id, Integer answerIndex) {
+    public AnswerDto solveTheQuiz(Long id, CheckAnswerDto checkAnswerDto) {
         AnswerDto answerDto = new AnswerDto();
         Quiz quiz = quizRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        if (quiz.getAnswer().equals(answerIndex)) {
+        if (quiz.getAnswer().equals(checkAnswerDto.getAnswer())) {
             answerDto.setSuccess(true);
             answerDto.setFeedback("Congratulations, you're right!");
         }

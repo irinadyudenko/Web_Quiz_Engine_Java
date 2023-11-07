@@ -1,5 +1,6 @@
 package engine.controller;
 
+import engine.dto.CheckAnswerDto;
 import engine.dto.NewQuizDto;
 import engine.service.QuizService;
 import lombok.RequiredArgsConstructor;
@@ -37,8 +38,8 @@ public class QuizController {
     }
 
     @PostMapping("/quizzes/{id}/solve")
-    public ResponseEntity<?> solveTheQuiz(@RequestParam(name = "answer") Integer answerIndex,
+    public ResponseEntity<?> solveTheQuiz(@RequestBody CheckAnswerDto checkAnswerDto,
                                           @PathVariable Long id) {
-        return new ResponseEntity<>(quizService.solveTheQuiz(id, answerIndex), HttpStatus.OK);
+        return new ResponseEntity<>(quizService.solveTheQuiz(id, checkAnswerDto), HttpStatus.OK);
     }
 }
