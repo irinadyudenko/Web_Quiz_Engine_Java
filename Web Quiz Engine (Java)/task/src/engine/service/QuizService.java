@@ -11,6 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class QuizService {
@@ -35,5 +38,12 @@ public class QuizService {
         Quiz quiz = quizRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         return modelMapper.map(quiz, QuizDto.class);
+    }
+
+    public List<QuizDto> getQuizzes() {
+        List<QuizDto> quizDtos = new ArrayList<>();
+        quizRepository.findAll()
+                .forEach(quiz -> quizDtos.add(modelMapper.map(quiz, QuizDto.class)));
+        return quizDtos;
     }
 }

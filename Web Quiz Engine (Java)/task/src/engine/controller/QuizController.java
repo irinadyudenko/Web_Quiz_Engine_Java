@@ -1,7 +1,6 @@
 package engine.controller;
 
 import engine.dto.NewQuizDto;
-import engine.dto.QuizDto;
 import engine.service.QuizService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,6 +17,11 @@ public class QuizController {
     @GetMapping("/quizzes/{id}")
     public ResponseEntity<?> getQuizById(@PathVariable Long id) {
         return new ResponseEntity<>(quizService.getQuizById(id), HttpStatus.OK);
+    }
+
+    @GetMapping("/quizzes")
+    public ResponseEntity<?> getQuizzes() {
+        return new ResponseEntity<>(quizService.getQuizzes(), HttpStatus.OK);
     }
 
     @PostMapping("/quiz")
