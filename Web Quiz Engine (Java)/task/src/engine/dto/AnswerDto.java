@@ -9,5 +9,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class AnswerDto {
     private boolean success = false;
-    private String feedback = "Oops! Try again!";
+    private String feedback = "Wrong answer! Please, try again.";
 }
