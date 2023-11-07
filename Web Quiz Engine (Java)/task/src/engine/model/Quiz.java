@@ -16,7 +16,6 @@ public class Quiz {
 
     @Column(name = "id")
     @Id
-    @GeneratedValue()
     private Long id;
 
     @Column(name = "title")
