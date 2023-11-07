@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
@@ -30,7 +32,7 @@ public class QuizController {
     }
 
     @PostMapping("/quizzes")
-    public ResponseEntity<?> addNewQuiz(@RequestBody NewQuizDto newQuizDto) {
+    public ResponseEntity<?> addNewQuiz(@Valid @RequestBody NewQuizDto newQuizDto) {
         return new ResponseEntity<>(quizService.saveNewQuiz(newQuizDto), HttpStatus.OK);
     }
 
