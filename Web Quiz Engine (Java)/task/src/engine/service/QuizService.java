@@ -16,8 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -56,10 +54,6 @@ public class QuizService {
     }
 
     public Page<Quiz> getQuizzes(Integer pageNumber) {
-        /*List<QuizDto> quizDtos = new ArrayList<>();
-        quizRepository.findAll()
-                .forEach(quiz -> quizDtos.add(modelMapper.map(quiz, QuizDto.class)));
-        */
         return quizRepository.findAll(PageRequest.of(pageNumber, 10));
 
     }
