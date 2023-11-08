@@ -1,8 +1,10 @@
 package engine.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -43,11 +45,14 @@ public class Quiz {
             joinColumns=@JoinColumn(name="quiz_id")
     )
     @Fetch(value = FetchMode.SUBSELECT)
+    @JsonIgnore
     private Set<Integer> answer;
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     @NotNull
+    @ToString.Exclude
+    @JsonIgnore
     private User user;
 
     @Override

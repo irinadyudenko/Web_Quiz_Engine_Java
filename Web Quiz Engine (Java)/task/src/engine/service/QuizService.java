@@ -9,6 +9,8 @@ import engine.model.User;
 import engine.repository.QuizRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -53,11 +55,13 @@ public class QuizService {
         return modelMapper.map(quiz, QuizDto.class);
     }
 
-    public List<QuizDto> getQuizzes() {
-        List<QuizDto> quizDtos = new ArrayList<>();
+    public Page<Quiz> getQuizzes(Integer pageNumber) {
+        /*List<QuizDto> quizDtos = new ArrayList<>();
         quizRepository.findAll()
                 .forEach(quiz -> quizDtos.add(modelMapper.map(quiz, QuizDto.class)));
-        return quizDtos;
+        */
+        return quizRepository.findAll(PageRequest.of(pageNumber, 10));
+
     }
 
     @Transactional

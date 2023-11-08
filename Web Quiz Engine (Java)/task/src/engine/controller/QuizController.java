@@ -24,8 +24,8 @@ public class QuizController {
     }
 
     @GetMapping("/quizzes")
-    public ResponseEntity<?> getQuizzes() {
-        return new ResponseEntity<>(quizService.getQuizzes(), HttpStatus.OK);
+    public ResponseEntity<?> getQuizzes(@RequestParam(name = "page", defaultValue = "0") Integer pageNumber) {
+        return new ResponseEntity<>(quizService.getQuizzes(pageNumber), HttpStatus.OK);
     }
 
     @PostMapping("/quiz")
