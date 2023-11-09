@@ -10,6 +10,7 @@ import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -22,6 +23,7 @@ import java.util.Set;
 public class Quiz {
 
     @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
 
@@ -54,6 +56,12 @@ public class Quiz {
     @ToString.Exclude
     @JsonIgnore
     private User user;
+
+    @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL)
+    @ToString.Exclude
+    @JsonIgnore
+    Collection<CompletedQuiz> completedQuizzes;
+
 
     @Override
     public boolean equals(Object otherObject) {
