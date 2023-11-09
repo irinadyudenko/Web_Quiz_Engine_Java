@@ -4,24 +4,29 @@ import engine.dto.AnswerDto;
 import engine.dto.CheckAnswerDto;
 import engine.dto.NewQuizDto;
 import engine.dto.QuizDto;
+import engine.model.CompletedQuiz;
 import engine.model.Quiz;
 import engine.model.User;
+import engine.repository.CompletedQuizRepository;
 import engine.repository.QuizRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
 public class QuizService {
     private final ModelMapper modelMapper;
     private final QuizRepository quizRepository;
+    private final CompletedQuizRepository completedQuizRepository;
     private final UserService userService;
 
     @Transactional
@@ -41,7 +46,6 @@ public class QuizService {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
         Quiz quizToSave = modelMapper.map(newQuizDto, Quiz.class);
-        quizToSave.setId(quizRepository.count()+1);
         quizToSave.setUser(user);
         Quiz quiz = quizRepository.save(quizToSave);
         return modelMapper.map(quiz, QuizDto.class);
@@ -59,13 +63,22 @@ public class QuizService {
     }
 
     @Transactional
-    public AnswerDto solveTheQuiz(Long id, CheckAnswerDto checkAnswerDto) {
+    public AnswerDto solveTheQuiz(Long id, CheckAnswerDto checkAnswerDto, String userEmail) {
         AnswerDto answerDto = new AnswerDto();
         Quiz quiz = quizRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        User user = userService.findUserByEmail(userEmail);
+        if (user == null) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        }
         if (quiz.getAnswer().equals(checkAnswerDto.getAnswer())) {
             answerDto.setSuccess(true);
             answerDto.setFeedback("Congratulations, you're right!");
+            CompletedQuiz completedQuiz = new CompletedQuiz();
+            completedQuiz.setCompletedAt(LocalDateTime.now());
+            completedQuiz.setUser(user);
+            completedQuiz.setQuiz(quiz);
+            completedQuizRepository.save(completedQuiz);
         }
         return answerDto;
     }
@@ -83,5 +96,13 @@ public class QuizService {
         catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
+    }
+
+    public Page<?> getCompletedQuizzes(Integer pageNumber, String userEmail) {
+        User user = userService.findUserByEmail(userEmail);
+        if (user == null) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        }
+        return completedQuizRepository.findByUser(user, PageRequest.of(pageNumber, 10,  Sort.by("completedAt").descending()));
     }
 }

@@ -28,6 +28,12 @@ public class QuizController {
         return new ResponseEntity<>(quizService.getQuizzes(pageNumber), HttpStatus.OK);
     }
 
+    @GetMapping("/quizzes/completed")
+    public ResponseEntity<?> getCompletedQuizzesByUser(@RequestParam(name = "page", defaultValue = "0") Integer pageNumber,
+                                                       Principal principal) {
+        return new ResponseEntity<>(quizService.getCompletedQuizzes(pageNumber, principal.getName()), HttpStatus.OK);
+    }
+
     @PostMapping("/quiz")
     public ResponseEntity<?> postAnswer(@RequestParam(name = "answer") Integer answerIndex) {
         return new ResponseEntity<>(quizService.checkAnswer(answerIndex), HttpStatus.OK);
@@ -40,11 +46,12 @@ public class QuizController {
 
     @PostMapping("/quizzes/{id}/solve")
     public ResponseEntity<?> solveTheQuiz(@RequestBody CheckAnswerDto checkAnswerDto,
-                                          @PathVariable Long id) {
-        return new ResponseEntity<>(quizService.solveTheQuiz(id, checkAnswerDto), HttpStatus.OK);
+                                          @PathVariable Long id,
+                                          Principal principal) {
+        return new ResponseEntity<>(quizService.solveTheQuiz(id, checkAnswerDto, principal.getName()), HttpStatus.OK);
     }
     @DeleteMapping("/quizzes/{id}")
-    public ResponseEntity<?> deleteRecipe(@PathVariable Long id, Principal principal) {
+    public ResponseEntity<?> deleteQuiz(@PathVariable Long id, Principal principal) {
         quizService.deleteQuiz(id, principal.getName());
         return ResponseEntity.noContent().build();
     }
